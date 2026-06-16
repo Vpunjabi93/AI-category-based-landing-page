@@ -3,25 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimesPro | AI, ML & GenAI Certificate Programmes</title>
-    <meta name="description" content="Learn AI from IIT, IIM and DTU. Explore certificate programmes from your first model to leading AI strategy.">
+    <title>TimesPro | AI, ML & GenAI Certificate Programmes from IIT, IIM & DTU</title>
+    <meta name="description" content="Learn AI from IIT, IIM and DTU. Explore certificate programmes from your first model to leading AI strategy, delivered through TimesPro.">
+
+    <!-- Paid-traffic landing page: keep out of search indexes -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#00008C">
+
+    <!-- Social share -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI, ML & GenAI Certificate Programmes from IIT, IIM & DTU">
+    <meta property="og:description" content="From your first model to leading AI strategy — find the right certificate programme for where you are today.">
+    <meta property="og:image" content="hero-bg.png">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2300008C'/%3E%3Ctext x='50' y='70' font-size='54' font-family='Arial,sans-serif' font-weight='bold' text-anchor='middle' fill='%23ffffff'%3Et%3C/text%3E%3C/svg%3E">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="hero-bg.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header Navigation (Non-sticky) -->
+    <a href="#programmes" class="skip-link">Skip to programmes</a>
+
+    <!-- Header Navigation (Non-sticky, minimal by design for a paid landing page) -->
     <header class="top-nav">
         <div class="nav-container">
-            <div class="logo">TimesPro</div>
+            <a href="#top" class="logo" aria-label="TimesPro home">TimesPro</a>
+            <span class="top-nav-tag">AI &amp; ML Certificate Programmes</span>
         </div>
     </header>
 
-    <!-- Secondary Sticky Navigation (Hidden initially) -->
-    <nav class="sticky-nav" id="stickyNav">
+    <!-- Secondary Sticky Navigation (revealed on scroll) -->
+    <nav class="sticky-nav" id="stickyNav" aria-label="Section navigation">
         <div class="nav-container">
+            <a href="#top" class="logo logo-sm">TimesPro</a>
             <div class="sticky-links">
                 <a href="#goalFilter">Goals</a>
                 <a href="#programmes">Programmes</a>
@@ -29,39 +47,52 @@
                 <a href="#faculty">Faculty</a>
                 <a href="#faq">FAQ</a>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Talk To A Counsellor</button>
+            <button type="button" class="btn btn-primary btn-sm" data-counsellor>Talk To A Counsellor</button>
         </div>
     </nav>
 
+    <main id="top">
+
     <!-- Hero Section -->
-    <section class="hero" style="background-image: url('hero-bg.png');">
-        <div class="hero-gradient-overlay"></div>
+    <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-gradient-overlay" aria-hidden="true"></div>
         <div class="hero-container container">
             <div class="hero-content">
                 <h1>Learn AI from IIT, IIM and DTU.<br>Find the Right Programme for Where You Are Today.</h1>
                 <p>From your first model to leading AI strategy — explore certificate programmes from IIT Delhi, IIT Roorkee, IIT Madras, DTU and IIM Nagpur, delivered through TimesPro.</p>
                 <div class="hero-ctas">
-                    <button class="btn btn-secondary btn-secondary-white-border" onclick="document.getElementById('goalFilter').scrollIntoView({behavior: 'smooth'})">Explore Programmes</button>
+                    <button type="button" class="btn btn-primary" onclick="scrollToId('goalFilter')">Find My Programme</button>
+                    <button type="button" class="btn btn-secondary btn-secondary-white-border" data-counsellor>Talk to a Counsellor</button>
                 </div>
+                <ul class="hero-trust" aria-label="At a glance">
+                    <li><strong>8</strong> certificate programmes</li>
+                    <li><strong>5</strong> partner institutes</li>
+                    <li><strong>6&ndash;8 mo</strong> weekend formats</li>
+                </ul>
             </div>
             <div class="hero-form-wrapper" id="heroFormSection">
                 <div class="hero-form-container">
-                    <h3>Request Information</h3>
-                    <form id="heroForm">
+                    <h2 class="form-title">Request Information</h2>
+                    <p class="form-sub">Tell us a little about yourself and a counsellor will reach out.</p>
+                    <form id="heroForm" novalidate>
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" required>
+                            <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="name" name="name" autocomplete="name" required>
+                            <span class="field-error" data-error-for="name"></span>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                            <input type="email" id="email" name="email" autocomplete="email" required>
+                            <span class="field-error" data-error-for="email"></span>
                         </div>
                         <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" required>
+                            <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
+                            <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="10-digit mobile number" required>
+                            <span class="field-error" data-error-for="phone"></span>
                         </div>
                         <div class="form-group">
-                            <label for="experience">Work Experience</label>
+                            <label for="experience">Work Experience <span class="req" aria-hidden="true">*</span></label>
                             <select id="experience" name="experience" required>
                                 <option value="" disabled selected>Select your experience</option>
                                 <option value="Fresher">Fresher</option>
@@ -70,23 +101,36 @@
                                 <option value="10-15 years">10-15 years</option>
                                 <option value="15+ Years">15+ Years</option>
                             </select>
+                            <span class="field-error" data-error-for="experience"></span>
                         </div>
                         <div class="form-group">
-                            <label for="programme">Interested Programme</label>
+                            <label for="programme">Interested Programme <span class="req" aria-hidden="true">*</span></label>
                             <select id="programme" name="programme" required>
                                 <option value="" disabled selected>Select a programme</option>
                                 <option value="Help me decide">Help me decide</option>
-                                <option value="1">PG Certificate in Data Science, ML & Generative AI</option>
-                                <option value="2">AI & ML for Industry</option>
-                                <option value="3">Quantum Computing & Machine Learning</option>
-                                <option value="4">Generative AI</option>
-                                <option value="5">Advanced Certificate in AI, ML and DL</option>
-                                <option value="6">Advanced Certificate in Artificial Intelligence</option>
-                                <option value="7">Applied AI & Deep Learning</option>
-                                <option value="8">PG Certificate in AI & GenAI for Managers</option>
+                                <option value="1">PG Certificate in Data Science, ML &amp; Generative AI &mdash; IIT Roorkee</option>
+                                <option value="2">AI &amp; ML for Industry &mdash; IIT Delhi</option>
+                                <option value="3">Quantum Computing &amp; Machine Learning &mdash; IIT Delhi</option>
+                                <option value="4">Generative AI &mdash; IIT Delhi</option>
+                                <option value="5">Advanced Certificate in AI, ML and DL &mdash; IIT Delhi</option>
+                                <option value="6">Advanced Certificate in Artificial Intelligence &mdash; DTU</option>
+                                <option value="7">Applied AI &amp; Deep Learning &mdash; IIT Madras</option>
+                                <option value="8">PG Certificate in AI &amp; GenAI for Managers &mdash; IIM Nagpur</option>
                             </select>
+                            <span class="field-error" data-error-for="programme"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Talk To A Counsellor</button>
+                        <div class="form-group form-consent">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <label for="consent">I authorise TimesPro and its representatives to contact me regarding this enquiry via phone, email and WhatsApp, and I agree to the <a href="#" target="_blank" rel="noopener">Privacy Policy</a>.</label>
+                            <span class="field-error" data-error-for="consent"></span>
+                        </div>
+                        <!-- Honeypot: hidden from users, traps bots -->
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Talk To A Counsellor</button>
+                        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
                     </form>
                 </div>
             </div>
@@ -94,93 +138,121 @@
     </section>
 
     <!-- Goal-Based Filter Section -->
-    <section class="filter-section" id="goalFilter">
+    <section class="filter-section reveal" id="goalFilter">
         <div class="container">
             <h2 class="section-title">What brings you to AI right now?</h2>
+            <p class="section-intro section-intro--center">Pick what fits you best — we'll surface the programmes built for that goal.</p>
             <div class="filter-grid">
-                <div class="filter-tile" data-filter="just-starting">
+                <button type="button" class="filter-tile" data-filter="just-starting">
+                    <span class="filter-icon" aria-hidden="true">&#9650;</span>
                     <h3>Just Starting in AI</h3>
                     <p>New to the field, or coming from a different background entirely</p>
-                </div>
-                <div class="filter-tile" data-filter="deepen-tech">
+                </button>
+                <button type="button" class="filter-tile" data-filter="deepen-tech">
+                    <span class="filter-icon" aria-hidden="true">&#9881;</span>
                     <h3>Deepen Technical Expertise</h3>
                     <p>Already coding, ready to go deeper into ML, DL or specialised AI</p>
-                </div>
-                <div class="filter-tile" data-filter="lead-ai">
+                </button>
+                <button type="button" class="filter-tile" data-filter="lead-ai">
+                    <span class="filter-icon" aria-hidden="true">&#9733;</span>
                     <h3>Lead AI Without Coding</h3>
                     <p>Manage or influence AI initiatives — no programming required</p>
-                </div>
-                <div class="filter-tile" data-filter="newest-ai">
-                    <h3>Newest in AI: Quantum & GenAI</h3>
+                </button>
+                <button type="button" class="filter-tile" data-filter="newest-ai">
+                    <span class="filter-icon" aria-hidden="true">&#10022;</span>
+                    <h3>Newest in AI: Quantum &amp; GenAI</h3>
                     <p>The most current frontiers — Generative AI and Quantum ML</p>
-                </div>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- Programme Grid Section (Tabbed Variant) -->
+    <!-- Programme Grid Section -->
     <section class="programme-section" id="programmes">
         <div class="container">
             <h2 class="section-title">All Programmes at a Glance</h2>
-            
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="all">All Programmes</button>
-                <button class="tab-btn" data-tab="just-starting">Just Starting</button>
-                <button class="tab-btn" data-tab="deepen-tech">Deepen Tech Expertise</button>
-                <button class="tab-btn" data-tab="lead-ai">Lead AI (No Coding)</button>
-                <button class="tab-btn" data-tab="newest-ai">Quantum & GenAI</button>
+
+            <div class="tabs" role="tablist" aria-label="Filter programmes by goal">
+                <button class="tab-btn active" data-tab="all" role="tab" aria-selected="true">All Programmes</button>
+                <button class="tab-btn" data-tab="just-starting" role="tab" aria-selected="false">Just Starting</button>
+                <button class="tab-btn" data-tab="deepen-tech" role="tab" aria-selected="false">Deepen Tech Expertise</button>
+                <button class="tab-btn" data-tab="lead-ai" role="tab" aria-selected="false">Lead AI (No Coding)</button>
+                <button class="tab-btn" data-tab="newest-ai" role="tab" aria-selected="false">Quantum &amp; GenAI</button>
+            </div>
+
+            <div class="results-bar">
+                <p class="results-count" id="resultsCount" aria-live="polite"></p>
+                <button type="button" class="link-btn" id="resetFilter" hidden>Show all 8 programmes</button>
             </div>
 
             <div class="programme-grid" id="programmeGrid">
-                <!-- Cards will be injected via JS to handle filtering and tabbing -->
+                <!-- Cards injected via JS to handle filtering and tabbing -->
             </div>
         </div>
     </section>
 
     <!-- Comparison Table Section -->
-    <section class="comparison-section" id="comparison">
+    <section class="comparison-section reveal" id="comparison">
         <div class="container">
             <h2 class="section-title">Compare Programmes Side by Side</h2>
-            <div class="table-responsive">
+            <p class="section-intro section-intro--center">Swap any column to compare the programmes you're weighing.</p>
+            <div class="table-responsive" tabindex="0" role="group" aria-label="Programme comparison table, scrollable horizontally">
                 <table class="comparison-table inverted-table" id="comparisonTable">
-                    <!-- Entire table generated via JS to invert axes easily -->
+                    <caption class="sr-only">Comparison of selected AI certificate programmes by institute, duration, format, fee and start date.</caption>
+                    <!-- Table body generated via JS -->
                 </table>
             </div>
             <div class="table-footnote">
                 <p>Application fee (₹1,000–₹2,500 depending on programme) is separate from the total fee shown and payable at the time of application. EMI options available on select programmes — terms offered by TimesPro, not the partner institute.</p>
-                <button class="btn btn-secondary mt-16" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})" style="margin-top: 16px;">Not Ready to Pick One? Talk to a Counsellor &rarr;</button>
+                <button type="button" class="btn btn-secondary mt-16" data-counsellor>Not Ready to Pick One? Talk to a Counsellor &rarr;</button>
             </div>
         </div>
     </section>
 
     <!-- Trust Section -->
-    <section class="trust-section" id="faculty">
+    <section class="trust-section reveal" id="faculty">
         <div class="container">
             <h2 class="section-title">Learn From the Same Faculty Teaching at These Institutes</h2>
-            
+
             <div class="trust-grid">
                 <!-- Testimonials -->
                 <div class="testimonials">
                     <h3 class="sub-section-title">What Our Learners Say</h3>
                     <p class="section-intro">Hear from professionals who've completed the IIT Delhi AI, ML and DL programme — representative of the TimesPro × IIT learning experience.</p>
-                    
+
                     <div class="testimonial-cards">
-                        <div class="testimonial-card">
-                            <p class="quote">"My learning is back in the forefront thanks to the quality education provided by the IIT Delhi CEP Certificate Programme in ML and DL. A field that once seemed daunting is now enjoyable and meaningful..."</p>
-                            <div class="author-info">
+                        <figure class="testimonial-card">
+                            <blockquote class="quote">"My learning is back in the forefront thanks to the quality education provided by the IIT Delhi CEP Certificate Programme in ML and DL. A field that once seemed daunting is now enjoyable and meaningful, as the carefully crafted course and experienced faculty made learning easy and practical."</blockquote>
+                            <figcaption class="author-info">
                                 <strong>Ankit Jain</strong>
                                 <span>Senior Vice President, Technology, Natwest Markets</span>
                                 <span class="tag">AI, ML and DL programme, Batch 04</span>
-                            </div>
-                        </div>
-                        <div class="testimonial-card">
-                            <p class="quote">"As a Senior Android and AI Engineer with over nine years of experience, I chose this programme to bridge the gap between traditional software development and applied ML engineering..."</p>
-                            <div class="author-info">
+                            </figcaption>
+                        </figure>
+                        <figure class="testimonial-card">
+                            <blockquote class="quote">"I found this course's curriculum highly promising for my career transition and professional advancement. Given the institution's reputation, the teaching quality is truly world-class."</blockquote>
+                            <figcaption class="author-info">
+                                <strong>Pawan Padwar</strong>
+                                <span>Branch Manager, Indian Bank</span>
+                                <span class="tag">AI, ML and DL programme, Batch 04</span>
+                            </figcaption>
+                        </figure>
+                        <figure class="testimonial-card">
+                            <blockquote class="quote">"As a Senior Android and AI Engineer with over nine years of experience, I chose this programme to bridge the gap between traditional software development and applied ML engineering. I now lead innovation-driven initiatives in computer vision and predictive modeling."</blockquote>
+                            <figcaption class="author-info">
                                 <strong>Akash Gupta</strong>
                                 <span>Mobile Application Developer, SettleMint India</span>
                                 <span class="tag">AI, ML and DL programme, Batch 05</span>
-                            </div>
-                        </div>
+                            </figcaption>
+                        </figure>
+                        <figure class="testimonial-card">
+                            <blockquote class="quote">"With 7 years of experience in Python and DevOps, I chose this program to build a solid foundation for transitioning into AI. I have confidently designed end-to-end intelligent solutions using AWS services, opening new career opportunities in data science."</blockquote>
+                            <figcaption class="author-info">
+                                <strong>Akshay Raj Kumawat</strong>
+                                <span>Senior Software Engineer, Principal Global Services</span>
+                                <span class="tag">AI, ML and DL programme, Batch 05</span>
+                            </figcaption>
+                        </figure>
                     </div>
                 </div>
 
@@ -189,7 +261,7 @@
                     <h3 class="sub-section-title">Faculty You'll Learn From</h3>
                     <div class="faculty-list">
                         <div class="faculty-card">
-                            <div class="faculty-avatar"></div>
+                            <div class="faculty-avatar" aria-hidden="true">GN</div>
                             <div class="faculty-info">
                                 <strong>Prof. Gaurav Kumar Nayak</strong>
                                 <span>IIT Roorkee</span>
@@ -197,7 +269,7 @@
                             </div>
                         </div>
                         <div class="faculty-card">
-                            <div class="faculty-avatar"></div>
+                            <div class="faculty-avatar" aria-hidden="true">TC</div>
                             <div class="faculty-info">
                                 <strong>Prof. Tanmoy Chakraborty</strong>
                                 <span>IIT Delhi</span>
@@ -205,11 +277,27 @@
                             </div>
                         </div>
                         <div class="faculty-card">
-                            <div class="faculty-avatar"></div>
+                            <div class="faculty-avatar" aria-hidden="true">TG</div>
                             <div class="faculty-info">
                                 <strong>Dr. Trasha Gupta</strong>
                                 <span>DTU</span>
                                 <p>Assistant Professor at DTU since 2018; research spans machine learning and healthcare diagnostics.</p>
+                            </div>
+                        </div>
+                        <div class="faculty-card">
+                            <div class="faculty-avatar" aria-hidden="true">BS</div>
+                            <div class="faculty-info">
+                                <strong>Prof. Babji Srinivasan</strong>
+                                <span>IIT Madras (Pravartak)</span>
+                                <p>PhD from Texas Tech; research in cognitive systems engineering and human cyber-physical systems.</p>
+                            </div>
+                        </div>
+                        <div class="faculty-card">
+                            <div class="faculty-avatar" aria-hidden="true">PR</div>
+                            <div class="faculty-info">
+                                <strong>Dr. Pradeep Kumar Roy</strong>
+                                <span>IIM Nagpur</span>
+                                <p>Five years teaching ML, AI and NLP; published in IEEE Transactions on Artificial Intelligence.</p>
                             </div>
                         </div>
                     </div>
@@ -219,14 +307,14 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq-section" id="faq">
-        <div class="container">
+    <section class="faq-section reveal" id="faq">
+        <div class="container faq-container">
             <h2 class="section-title">Common Questions Before You Apply</h2>
             <div class="accordion">
                 <div class="accordion-item">
                     <button class="accordion-header" aria-expanded="false">Is this a degree or a certificate?</button>
                     <div class="accordion-content">
-                        <p>It's a certificate, not a degree — issued by the institute's continuing/executive education body. It carries the institute's name and academic rigour, but it won't appear as a degree on your transcript.</p>
+                        <p>It's a certificate, not a degree — issued by the institute's continuing/executive education body (CEP at IIT Delhi, CEC at IIT Roorkee, CTEL at DTU, or IIM Nagpur directly for the managers' programme). It carries the institute's name and academic rigour, but it won't appear as a degree on your transcript.</p>
                     </div>
                 </div>
                 <div class="accordion-item">
@@ -238,7 +326,13 @@
                 <div class="accordion-item">
                     <button class="accordion-header" aria-expanded="false">Do I need coding experience?</button>
                     <div class="accordion-content">
-                        <p>It depends on the programme. Several are open to freshers and don't assume prior coding background. IIM Nagpur's programme requires no coding at all. Others expect some existing technical foundation. Use the filter above to find matches.</p>
+                        <p>It depends on the programme. Several (IIT Delhi's AI &amp; ML for Industry, IIT Madras Pravartak) are open to freshers and don't assume prior coding background. IIM Nagpur's programme for managers requires no coding at all. Others (Generative AI, AI/ML/DL) expect some existing technical or maths foundation. Use the filter above to find programmes that match your starting point.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Is the fee negotiable, and are there payment options?</button>
+                    <div class="accordion-content">
+                        <p>Each programme has its own instalment schedule, generally split across 3-4 payments after an initial application fee. EMI and loan options are available on select programmes — these are services offered by TimesPro, not the partner institute, so terms should be confirmed directly with a counsellor.</p>
                     </div>
                 </div>
             </div>
@@ -246,19 +340,39 @@
     </section>
 
     <!-- Footer CTA Band -->
-    <footer class="footer-cta">
+    <section class="footer-cta">
         <div class="container text-center">
             <h2 class="section-title text-white">Not Sure Which Programme Fits? We'll Help You Figure It Out.</h2>
             <div class="footer-actions">
                 <div class="action-box">
-                    <button class="btn btn-secondary-white" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Talk to a Counsellor &rarr;</button>
+                    <button type="button" class="btn btn-secondary-white" data-counsellor>Talk to a Counsellor &rarr;</button>
                     <span class="microcopy">Tell us your background and goals — we'll point you to the right fit.</span>
                 </div>
                 <div class="action-box">
-                    <button class="btn btn-primary-white" onclick="document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Already Know Your Programme? &rarr;</button>
-                    <span class="microcopy text-white" style="color: #FFF0F0;">Apply directly, or save your spot before the next deadline.</span>
+                    <button type="button" class="btn btn-primary-white" onclick="scrollToId('heroFormSection')">Already Know Your Programme? &rarr;</button>
+                    <span class="microcopy">Apply directly, or save your spot before the next deadline.</span>
                 </div>
             </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="container site-footer-inner">
+            <div class="site-footer-brand">
+                <span class="logo logo-sm">TimesPro</span>
+                <p>TimesPro is the delivery partner for these programmes. Certificates are awarded by the respective partner institutes (IIT Delhi, IIT Roorkee, IIT Madras, DTU, IIM Nagpur). EMI and financing, where offered, are services of TimesPro and not the partner institute.</p>
+            </div>
+            <nav class="site-footer-links" aria-label="Footer">
+                <a href="#" rel="noopener">Privacy Policy</a>
+                <a href="#" rel="noopener">Terms of Use</a>
+                <a href="#" rel="noopener">Contact</a>
+            </nav>
+        </div>
+        <div class="container site-footer-bottom">
+            <span id="footerYear"></span> TimesPro. All rights reserved. Fees and start dates are indicative and subject to change by the partner institutes.
         </div>
     </footer>
 

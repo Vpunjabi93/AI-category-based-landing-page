@@ -1,3 +1,6 @@
+// Progressive enhancement flag — CSS uses this to gate reveal animations
+document.documentElement.classList.add('js');
+
 const programmes = [
     {
         id: "1",
@@ -80,7 +83,7 @@ const programmes = [
     {
         id: "7",
         title: "Applied AI & Deep Learning",
-        institute: "IIT Madras",
+        institute: "IIT Madras (Pravartak)",
         duration: "7 months",
         format: "Weekend",
         fee: "₹1,65,000",
@@ -105,142 +108,149 @@ const programmes = [
     }
 ];
 
+const TAB_LABELS = {
+    'all': 'All Programmes',
+    'just-starting': 'Just Starting',
+    'deepen-tech': 'Deepen Tech Expertise',
+    'lead-ai': 'Lead AI (No Coding)',
+    'newest-ai': 'Quantum & GenAI'
+};
+
+let activeFilter = 'all';
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial Render
+    document.getElementById('footerYear').textContent = '© ' + new Date().getFullYear();
+
     renderCards(programmes);
-    renderTable(programmes);
-
-    // Goal-based filtering via Tiles
-    const filterTiles = document.querySelectorAll('.filter-tile');
-    filterTiles.forEach(tile => {
-        tile.addEventListener('click', () => {
-            filterTiles.forEach(t => t.classList.remove('active'));
-            tile.classList.add('active');
-
-            const filter = tile.getAttribute('data-filter');
-            const filtered = programmes.filter(p => p.filters.includes(filter));
-            
-            renderCards(filtered);
-            document.getElementById('programmes').scrollIntoView({ behavior: 'smooth' });
-            
-            // Sync tabs
-            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            const matchingTab = document.querySelector(`.tab-btn[data-tab="${filter}"]`);
-            if(matchingTab) matchingTab.classList.add('active');
-        });
-    });
-
-    // Tab-based filtering (Interest-based)
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-
-            const tab = btn.getAttribute('data-tab');
-            if (tab === 'all') {
-                renderCards(programmes);
-            } else {
-                const filtered = programmes.filter(p => p.filters.includes(tab));
-                renderCards(filtered);
-            }
-
-            // Sync tiles visually
-            filterTiles.forEach(t => t.classList.remove('active'));
-            const matchingTile = document.querySelector(`.filter-tile[data-filter="${tab}"]`);
-            if(matchingTile) matchingTile.classList.add('active');
-        });
-    });
-
-    // FAQ Accordion
-    const accordionHeaders = document.querySelectorAll('.accordion-header');
-    accordionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
-            const content = header.nextElementSibling;
-            const expanded = header.getAttribute('aria-expanded') === 'true';
-            document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
-            accordionHeaders.forEach(h => h.setAttribute('aria-expanded', 'false'));
-            if (!expanded) {
-                header.setAttribute('aria-expanded', 'true');
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-        });
-    });
-
-    // Hero Form Submission
-    const heroForm = document.getElementById('heroForm');
-    if (heroForm) {
-        heroForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Form submitted! In a real environment, this would send data to the backend.');
-        });
-    }
-
-    // Sticky Nav visibility on scroll
-    const stickyNav = document.getElementById('stickyNav');
-    const heroSection = document.querySelector('.hero');
-    if (stickyNav && heroSection) {
-        window.addEventListener('scroll', () => {
-            // Show sticky nav when scrolled past the hero section
-            if (window.scrollY > heroSection.offsetHeight) {
-                stickyNav.classList.add('visible');
-            } else {
-                stickyNav.classList.remove('visible');
-            }
-        });
-    }
+    renderTable();
+    wireFilters();
+    wireAccordion();
+    wireForm();
+    wireCounsellorButtons();
+    wireStickyNav();
+    wireScrollReveal();
 });
 
+/* ---------------- Filtering (tiles + tabs stay in sync) ---------------- */
+function applyFilter(filter) {
+    activeFilter = filter;
+    const list = filter === 'all'
+        ? programmes
+        : programmes.filter(p => p.filters.includes(filter));
+    renderCards(list);
+
+    // Sync tabs
+    document.querySelectorAll('.tab-btn').forEach(t => {
+        const on = t.getAttribute('data-tab') === filter;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    // Sync tiles
+    document.querySelectorAll('.filter-tile').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-filter') === filter);
+    });
+
+    // Results bar
+    const count = document.getElementById('resultsCount');
+    const reset = document.getElementById('resetFilter');
+    if (filter === 'all') {
+        count.textContent = `Showing all ${programmes.length} programmes`;
+        reset.hidden = true;
+    } else {
+        count.textContent = `Showing ${list.length} of ${programmes.length} programmes · ${TAB_LABELS[filter]}`;
+        reset.hidden = false;
+    }
+}
+
+function wireFilters() {
+    document.querySelectorAll('.filter-tile').forEach(tile => {
+        tile.addEventListener('click', () => {
+            applyFilter(tile.getAttribute('data-filter'));
+            scrollToId('programmes');
+        });
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyFilter(btn.getAttribute('data-tab')));
+    });
+
+    document.getElementById('resetFilter').addEventListener('click', () => applyFilter('all'));
+
+    // Initialise the results bar
+    applyFilter('all');
+}
+
+/* ---------------- Programme cards ---------------- */
 function renderCards(data) {
     const grid = document.getElementById('programmeGrid');
     grid.innerHTML = '';
 
-    if (data.length === 0) {
-        grid.innerHTML = '<p>No programmes match your selection.</p>';
+    if (!data.length) {
+        grid.innerHTML = '<p class="empty-state">No programmes match your selection. <button type="button" class="link-btn" onclick="applyFilter(\'all\')">Show all programmes</button></p>';
         return;
     }
 
+    const frag = document.createDocumentFragment();
     data.forEach(p => {
-        grid.innerHTML += `
-            <div class="prog-card">
-                <div class="prog-institute">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                    ${p.institute}
-                </div>
-                <h3 class="prog-title">${p.title}</h3>
-                <span class="prog-badge">${p.badge}</span>
-                <div class="prog-meta">
-                    <span><strong>Duration:</strong> ${p.duration} | ${p.format}</span>
-                    <span><strong>Starts:</strong> ${p.startDate}</span>
-                </div>
-                <p style="font-size: 14px; margin-bottom: 24px; color: var(--tp-dark-gray);">${p.desc}</p>
-                <div style="margin-top: auto;">
-                    <button class="btn btn-primary" style="width: 100%;" onclick="applyForProgramme('${p.id}')">View Details & Apply</button>
-                </div>
+        const soon = startsSoon(p.startDate);
+        const card = document.createElement('article');
+        card.className = 'prog-card';
+        card.innerHTML = `
+            <div class="prog-institute">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                ${p.institute}
             </div>
-        `;
+            <h3 class="prog-title">${p.title}</h3>
+            <span class="prog-badge">${p.badge}</span>
+            <div class="prog-meta">
+                <span><strong>Duration:</strong> ${p.duration} · ${p.format}</span>
+                <span class="prog-start"><strong>Starts:</strong> ${p.startDate}${soon ? ' <span class="starts-soon">Starts soon</span>' : ''}</span>
+            </div>
+            <p class="prog-desc">${p.desc}</p>
+            <div class="prog-cta">
+                <button type="button" class="btn btn-primary btn-block" onclick="applyForProgramme('${p.id}')">View Details &amp; Apply</button>
+            </div>`;
+        frag.appendChild(card);
     });
+    grid.appendChild(frag);
 }
 
-// Helper to pre-fill the form and scroll to hero
+// Returns true when a start date is a real date within the next 30 days
+function startsSoon(dateStr) {
+    const d = parseStartDate(dateStr);
+    if (!d) return false;
+    const now = new Date();
+    const days = (d - now) / (1000 * 60 * 60 * 24);
+    return days > 0 && days <= 30;
+}
+
+function parseStartDate(str) {
+    const months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
+    const m = /^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/.exec(str.trim());
+    if (!m) return null;
+    const mon = months[m[2].toLowerCase()];
+    if (mon === undefined) return null;
+    return new Date(Number(m[3]), mon, Number(m[1]));
+}
+
+// Pre-fill the form's programme dropdown and scroll to the form
 function applyForProgramme(id) {
     const progSelect = document.getElementById('programme');
-    if (progSelect) {
-        progSelect.value = id;
-    }
-    document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'});
+    if (progSelect) progSelect.value = id;
+    scrollToId('heroFormSection');
 }
+window.applyForProgramme = applyForProgramme;
+window.applyFilter = applyFilter;
 
-let compareSelection = [1, 2, 4]; // Default comparing first 3 distinct programmes
+/* ---------------- Comparison table ---------------- */
+let compareSelection = ["1", "2", "4"]; // Default: 3 distinct programmes
 
 function renderTable() {
     const table = document.getElementById('comparisonTable');
     if (!table) return;
-    
-    // Get the selected programmes
-    const selectedProgrammes = compareSelection.map(id => programmes.find(p => p.id == id)).filter(Boolean);
 
-    // Create the inverted table rows
+    const selected = compareSelection.map(id => programmes.find(p => p.id === id)).filter(Boolean);
+
     const attributes = [
         { key: 'select', label: 'Select Programme' },
         { key: 'institute', label: 'Institute' },
@@ -251,22 +261,18 @@ function renderTable() {
     ];
 
     let html = '<tbody>';
-    
-    // Loop through attributes (rows)
     attributes.forEach(attr => {
         html += '<tr>';
-        // Left fixed column
-        html += `<th class="row-header">${attr.label}</th>`;
-        
-        // Data columns (for each selected programme)
-        selectedProgrammes.forEach((p, colIndex) => {
+        html += `<th scope="row" class="row-header">${attr.label}</th>`;
+        selected.forEach((p, colIndex) => {
             if (attr.key === 'select') {
-                // Render a select dropdown
-                let options = programmes.map(prog => 
-                    `<option value="${prog.id}" ${prog.id == p.id ? 'selected' : ''}>${prog.title}</option>`
-                ).join('');
-                html += `<th class="prog-header-cell">
-                    <select class="compare-select" onchange="updateCompare(${colIndex}, this.value)">
+                const options = programmes.map(prog => {
+                    // Disable a programme already chosen in another column to avoid duplicate columns
+                    const usedElsewhere = compareSelection.includes(prog.id) && prog.id !== p.id;
+                    return `<option value="${prog.id}" ${prog.id === p.id ? 'selected' : ''} ${usedElsewhere ? 'disabled' : ''}>${prog.title} — ${prog.institute}</option>`;
+                }).join('');
+                html += `<th scope="col" class="prog-header-cell">
+                    <select class="compare-select" aria-label="Choose programme for column ${colIndex + 1}" onchange="updateCompare(${colIndex}, this.value)">
                         ${options}
                     </select>
                 </th>`;
@@ -277,18 +283,197 @@ function renderTable() {
         html += '</tr>';
     });
 
-    // Action row
-    html += '<tr><th class="row-header">Action</th>';
-    selectedProgrammes.forEach(p => {
-        html += `<td><button class="btn btn-outline" style="width: 100%; padding: 8px;" onclick="applyForProgramme('${p.id}')">Apply</button></td>`;
+    html += '<tr><th scope="row" class="row-header">Action</th>';
+    selected.forEach(p => {
+        html += `<td><button type="button" class="btn btn-outline btn-block" onclick="applyForProgramme('${p.id}')">Apply</button></td>`;
     });
-    html += '</tr>';
+    html += '</tr></tbody>';
 
-    html += '</tbody>';
     table.innerHTML = html;
 }
 
 window.updateCompare = function(colIndex, newId) {
-    compareSelection[colIndex] = parseInt(newId);
-    renderTable(); // Re-render with new selection
+    compareSelection[colIndex] = String(newId);
+    renderTable();
 };
+
+/* ---------------- FAQ accordion ---------------- */
+function wireAccordion() {
+    const headers = document.querySelectorAll('.accordion-header');
+    headers.forEach((header, i) => {
+        const content = header.nextElementSibling;
+        const contentId = 'accordion-panel-' + i;
+        content.id = contentId;
+        content.setAttribute('role', 'region');
+        header.setAttribute('aria-controls', contentId);
+
+        header.addEventListener('click', () => {
+            const isOpen = header.getAttribute('aria-expanded') === 'true';
+            // Close all
+            headers.forEach(h => {
+                h.setAttribute('aria-expanded', 'false');
+                h.nextElementSibling.style.maxHeight = null;
+            });
+            // Open the clicked one if it was closed
+            if (!isOpen) {
+                header.setAttribute('aria-expanded', 'true');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    });
+
+    // Keep an open panel correctly sized if the viewport changes
+    window.addEventListener('resize', () => {
+        const open = document.querySelector('.accordion-header[aria-expanded="true"]');
+        if (open) open.nextElementSibling.style.maxHeight = open.nextElementSibling.scrollHeight + 'px';
+    });
+}
+
+/* ---------------- Lead form ---------------- */
+function wireForm() {
+    const form = document.getElementById('heroForm');
+    if (!form) return;
+    const status = document.getElementById('formStatus');
+
+    const validators = {
+        name: v => v.trim().length >= 2 || 'Please enter your name.',
+        email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) || 'Enter a valid email address.',
+        phone: v => /^[0-9+\-\s()]{8,15}$/.test(v.trim()) || 'Enter a valid phone number.',
+        experience: v => v !== '' || 'Select your experience.',
+        programme: v => v !== '' || 'Select a programme.',
+        consent: (v, el) => el.checked || 'Please accept to continue.'
+    };
+
+    function validateField(name) {
+        const el = form.elements[name];
+        const errEl = form.querySelector(`[data-error-for="${name}"]`);
+        const result = validators[name](el.value, el);
+        const ok = result === true;
+        if (errEl) errEl.textContent = ok ? '' : result;
+        el.closest('.form-group').classList.toggle('has-error', !ok);
+        el.setAttribute('aria-invalid', ok ? 'false' : 'true');
+        return ok;
+    }
+
+    Object.keys(validators).forEach(name => {
+        const el = form.elements[name];
+        el.addEventListener('blur', () => validateField(name));
+        el.addEventListener('input', () => {
+            if (el.closest('.form-group').classList.contains('has-error')) validateField(name);
+        });
+    });
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        status.className = 'form-status';
+        status.textContent = '';
+
+        // Honeypot: real users never fill this
+        if (form.elements['company'].value !== '') return;
+
+        const allValid = Object.keys(validators).map(validateField).every(Boolean);
+        if (!allValid) {
+            status.className = 'form-status is-error';
+            status.textContent = 'Please fix the highlighted fields and try again.';
+            const firstError = form.querySelector('.form-group.has-error input, .form-group.has-error select');
+            if (firstError) firstError.focus();
+            return;
+        }
+
+        // TODO: wire to the real lead-capture endpoint (e.g. fetch POST to CRM / Salesforce).
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        setTimeout(() => {
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Talk To A Counsellor';
+            status.className = 'form-status is-success';
+            status.textContent = 'Thank you! A counsellor will reach out to you shortly.';
+            form.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+        }, 600);
+    });
+}
+
+/* ---------------- Counsellor CTAs ---------------- */
+function wireCounsellorButtons() {
+    document.querySelectorAll('[data-counsellor]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const prog = document.getElementById('programme');
+            if (prog) prog.value = 'Help me decide';
+            scrollToId('heroFormSection');
+            setTimeout(() => {
+                const name = document.getElementById('name');
+                if (name) name.focus({ preventScroll: true });
+            }, 500);
+        });
+    });
+}
+
+/* ---------------- Sticky nav + active section ---------------- */
+function wireStickyNav() {
+    const stickyNav = document.getElementById('stickyNav');
+    const hero = document.querySelector('.hero');
+    if (!stickyNav || !hero) return;
+
+    const onScroll = () => {
+        stickyNav.classList.toggle('visible', window.scrollY > hero.offsetHeight * 0.6);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Highlight the section currently in view
+    const links = Array.from(stickyNav.querySelectorAll('.sticky-links a'));
+    const sections = links
+        .map(a => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+
+    if ('IntersectionObserver' in window && sections.length) {
+        const spy = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    links.forEach(l => l.classList.toggle('active',
+                        l.getAttribute('href') === '#' + entry.target.id));
+                }
+            });
+        }, { rootMargin: '-45% 0px -50% 0px' });
+        sections.forEach(s => spy.observe(s));
+    }
+}
+
+/* ---------------- Scroll reveal ---------------- */
+function wireScrollReveal() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = Array.from(document.querySelectorAll('.reveal'));
+    const revealAll = () => items.forEach(el => el.classList.add('is-visible'));
+
+    if (reduce || !('IntersectionObserver' in window)) {
+        revealAll();
+        return;
+    }
+
+    const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    items.forEach(el => io.observe(el));
+
+    // Safety net: never let content stay permanently hidden if the observer
+    // doesn't fire (bfcache restore, frozen tab, edge-case browsers).
+    setTimeout(revealAll, 2500);
+    window.addEventListener('pageshow', e => { if (e.persisted) revealAll(); });
+}
+
+/* ---------------- Smooth scroll helper (respects reduced motion) ---------------- */
+function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+}
+window.scrollToId = scrollToId;
