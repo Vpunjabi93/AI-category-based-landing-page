@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimesPro | AI, ML & GenAI Certificate Programmes</title>
+    <meta name="description" content="Learn AI from IIT, IIM and DTU. Explore certificate programmes from your first model to leading AI strategy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navigation (Non-sticky) -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="logo">TimesPro</div>
+        </div>
+    </header>
+
+    <!-- Secondary Sticky Navigation (Hidden initially) -->
+    <nav class="sticky-nav" id="stickyNav">
+        <div class="nav-container">
+            <div class="sticky-links">
+                <a href="#goalFilter">Goals</a>
+                <a href="#programmes">Programmes</a>
+                <a href="#comparison">Compare</a>
+                <a href="#faculty">Faculty</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Talk To A Counsellor</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" style="background-image: url('hero-bg.png');">
+        <div class="hero-gradient-overlay"></div>
+        <div class="hero-container container">
+            <div class="hero-content">
+                <h1>Learn AI from IIT, IIM and DTU.<br>Find the Right Programme for Where You Are Today.</h1>
+                <p>From your first model to leading AI strategy — explore certificate programmes from IIT Delhi, IIT Roorkee, IIT Madras, DTU and IIM Nagpur, delivered through TimesPro.</p>
+                <div class="hero-ctas">
+                    <button class="btn btn-secondary btn-secondary-white-border" onclick="document.getElementById('goalFilter').scrollIntoView({behavior: 'smooth'})">Explore Programmes</button>
+                </div>
+            </div>
+            <div class="hero-form-wrapper" id="heroFormSection">
+                <div class="hero-form-container">
+                    <h3>Request Information</h3>
+                    <form id="heroForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Work Experience</label>
+                            <select id="experience" name="experience" required>
+                                <option value="" disabled selected>Select your experience</option>
+                                <option value="Fresher">Fresher</option>
+                                <option value="2-5 years">2-5 years</option>
+                                <option value="5-10 years">5-10 years</option>
+                                <option value="10-15 years">10-15 years</option>
+                                <option value="15+ Years">15+ Years</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="programme">Interested Programme</label>
+                            <select id="programme" name="programme" required>
+                                <option value="" disabled selected>Select a programme</option>
+                                <option value="Help me decide">Help me decide</option>
+                                <option value="1">PG Certificate in Data Science, ML & Generative AI</option>
+                                <option value="2">AI & ML for Industry</option>
+                                <option value="3">Quantum Computing & Machine Learning</option>
+                                <option value="4">Generative AI</option>
+                                <option value="5">Advanced Certificate in AI, ML and DL</option>
+                                <option value="6">Advanced Certificate in Artificial Intelligence</option>
+                                <option value="7">Applied AI & Deep Learning</option>
+                                <option value="8">PG Certificate in AI & GenAI for Managers</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Talk To A Counsellor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Goal-Based Filter Section -->
+    <section class="filter-section" id="goalFilter">
+        <div class="container">
+            <h2 class="section-title">What brings you to AI right now?</h2>
+            <div class="filter-grid">
+                <div class="filter-tile" data-filter="just-starting">
+                    <h3>Just Starting in AI</h3>
+                    <p>New to the field, or coming from a different background entirely</p>
+                </div>
+                <div class="filter-tile" data-filter="deepen-tech">
+                    <h3>Deepen Technical Expertise</h3>
+                    <p>Already coding, ready to go deeper into ML, DL or specialised AI</p>
+                </div>
+                <div class="filter-tile" data-filter="lead-ai">
+                    <h3>Lead AI Without Coding</h3>
+                    <p>Manage or influence AI initiatives — no programming required</p>
+                </div>
+                <div class="filter-tile" data-filter="newest-ai">
+                    <h3>Newest in AI: Quantum & GenAI</h3>
+                    <p>The most current frontiers — Generative AI and Quantum ML</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programme Grid Section (Tabbed Variant) -->
+    <section class="programme-section" id="programmes">
+        <div class="container">
+            <h2 class="section-title">All Programmes at a Glance</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="all">All Programmes</button>
+                <button class="tab-btn" data-tab="just-starting">Just Starting</button>
+                <button class="tab-btn" data-tab="deepen-tech">Deepen Tech Expertise</button>
+                <button class="tab-btn" data-tab="lead-ai">Lead AI (No Coding)</button>
+                <button class="tab-btn" data-tab="newest-ai">Quantum & GenAI</button>
+            </div>
+
+            <div class="programme-grid" id="programmeGrid">
+                <!-- Cards will be injected via JS to handle filtering and tabbing -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table Section -->
+    <section class="comparison-section" id="comparison">
+        <div class="container">
+            <h2 class="section-title">Compare Programmes Side by Side</h2>
+            <div class="table-responsive">
+                <table class="comparison-table inverted-table" id="comparisonTable">
+                    <!-- Entire table generated via JS to invert axes easily -->
+                </table>
+            </div>
+            <div class="table-footnote">
+                <p>Application fee (₹1,000–₹2,500 depending on programme) is separate from the total fee shown and payable at the time of application. EMI options available on select programmes — terms offered by TimesPro, not the partner institute.</p>
+                <button class="btn btn-secondary mt-16" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})" style="margin-top: 16px;">Not Ready to Pick One? Talk to a Counsellor &rarr;</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust-section" id="faculty">
+        <div class="container">
+            <h2 class="section-title">Learn From the Same Faculty Teaching at These Institutes</h2>
+            
+            <div class="trust-grid">
+                <!-- Testimonials -->
+                <div class="testimonials">
+                    <h3 class="sub-section-title">What Our Learners Say</h3>
+                    <p class="section-intro">Hear from professionals who've completed the IIT Delhi AI, ML and DL programme — representative of the TimesPro × IIT learning experience.</p>
+                    
+                    <div class="testimonial-cards">
+                        <div class="testimonial-card">
+                            <p class="quote">"My learning is back in the forefront thanks to the quality education provided by the IIT Delhi CEP Certificate Programme in ML and DL. A field that once seemed daunting is now enjoyable and meaningful..."</p>
+                            <div class="author-info">
+                                <strong>Ankit Jain</strong>
+                                <span>Senior Vice President, Technology, Natwest Markets</span>
+                                <span class="tag">AI, ML and DL programme, Batch 04</span>
+                            </div>
+                        </div>
+                        <div class="testimonial-card">
+                            <p class="quote">"As a Senior Android and AI Engineer with over nine years of experience, I chose this programme to bridge the gap between traditional software development and applied ML engineering..."</p>
+                            <div class="author-info">
+                                <strong>Akash Gupta</strong>
+                                <span>Mobile Application Developer, SettleMint India</span>
+                                <span class="tag">AI, ML and DL programme, Batch 05</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Faculty Profiles -->
+                <div class="faculty">
+                    <h3 class="sub-section-title">Faculty You'll Learn From</h3>
+                    <div class="faculty-list">
+                        <div class="faculty-card">
+                            <div class="faculty-avatar"></div>
+                            <div class="faculty-info">
+                                <strong>Prof. Gaurav Kumar Nayak</strong>
+                                <span>IIT Roorkee</span>
+                                <p>Specialises in Generative AI, data-efficient deep learning and computer vision.</p>
+                            </div>
+                        </div>
+                        <div class="faculty-card">
+                            <div class="faculty-avatar"></div>
+                            <div class="faculty-info">
+                                <strong>Prof. Tanmoy Chakraborty</strong>
+                                <span>IIT Delhi</span>
+                                <p>Recipient of the Ramanujan Fellowship and recognised as an ACM Distinguished Speaker.</p>
+                            </div>
+                        </div>
+                        <div class="faculty-card">
+                            <div class="faculty-avatar"></div>
+                            <div class="faculty-info">
+                                <strong>Dr. Trasha Gupta</strong>
+                                <span>DTU</span>
+                                <p>Assistant Professor at DTU since 2018; research spans machine learning and healthcare diagnostics.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Common Questions Before You Apply</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Is this a degree or a certificate?</button>
+                    <div class="accordion-content">
+                        <p>It's a certificate, not a degree — issued by the institute's continuing/executive education body. It carries the institute's name and academic rigour, but it won't appear as a degree on your transcript.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">I work long hours — can I keep up?</button>
+                    <div class="accordion-content">
+                        <p>All programmes run on a weekend format, spread across 6-8 months specifically so working professionals can manage the weekly load alongside a full-time job.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Do I need coding experience?</button>
+                    <div class="accordion-content">
+                        <p>It depends on the programme. Several are open to freshers and don't assume prior coding background. IIM Nagpur's programme requires no coding at all. Others expect some existing technical foundation. Use the filter above to find matches.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA Band -->
+    <footer class="footer-cta">
+        <div class="container text-center">
+            <h2 class="section-title text-white">Not Sure Which Programme Fits? We'll Help You Figure It Out.</h2>
+            <div class="footer-actions">
+                <div class="action-box">
+                    <button class="btn btn-secondary-white" onclick="document.getElementById('programme').value='Help me decide'; document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Talk to a Counsellor &rarr;</button>
+                    <span class="microcopy">Tell us your background and goals — we'll point you to the right fit.</span>
+                </div>
+                <div class="action-box">
+                    <button class="btn btn-primary-white" onclick="document.getElementById('heroFormSection').scrollIntoView({behavior: 'smooth'})">Already Know Your Programme? &rarr;</button>
+                    <span class="microcopy text-white" style="color: #FFF0F0;">Apply directly, or save your spot before the next deadline.</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
