@@ -351,7 +351,7 @@ section[id], main[id] { scroll-margin-top: calc(var(--sticky-h) + 16px); }
     letter-spacing: -1px;
     text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
 }
-.hero p {
+.hero-content p {
     font-size: clamp(16px, 2vw, 20px);
     margin-bottom: 32px;
     color: rgba(255, 255, 255, 0.95);
@@ -907,7 +907,7 @@ html.js .reveal.is-visible {
     .trust-grid { grid-template-columns: 1fr; }
     .hero-container { flex-direction: column; text-align: center; }
     .hero-content { max-width: 100%; }
-    .hero p { margin-left: auto; margin-right: auto; }
+    .hero-content p { margin-left: auto; margin-right: auto; }
     .hero-ctas, .hero-trust { justify-content: center; }
     .hero-form-wrapper { width: 100%; max-width: 440px; flex: auto; text-align: left; }
 }
