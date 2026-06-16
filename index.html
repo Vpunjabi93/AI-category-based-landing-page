@@ -31,7 +31,13 @@
     <!-- Header Navigation (Non-sticky, minimal by design for a paid landing page) -->
     <header class="top-nav">
         <div class="nav-container">
-            <a href="#top" class="logo" aria-label="TimesPro home">TimesPro</a>
+            <div class="brand-lockup">
+                <a href="#top" class="brand-link" aria-label="TimesPro home">
+                    <img src="assets/logos/timespro.svg" alt="TimesPro" class="brand-logo brand-logo--timespro">
+                </a>
+                <span class="brand-divider" aria-hidden="true"></span>
+                <img src="assets/logos/times-group.png" alt="The Times Group" class="brand-logo brand-logo--timesgroup">
+            </div>
             <span class="top-nav-tag">AI &amp; ML Certificate Programmes</span>
         </div>
     </header>
@@ -39,7 +45,7 @@
     <!-- Secondary Sticky Navigation (revealed on scroll) -->
     <nav class="sticky-nav" id="stickyNav" aria-label="Section navigation">
         <div class="nav-container">
-            <a href="#top" class="logo logo-sm">TimesPro</a>
+            <a href="#top" class="brand-link" aria-label="TimesPro home"><img src="assets/logos/timespro.svg" alt="TimesPro" class="brand-logo brand-logo--sticky"></a>
             <div class="sticky-links">
                 <a href="#goalFilter">Goals</a>
                 <a href="#programmes">Programmes</a>
@@ -59,6 +65,7 @@
         <div class="hero-gradient-overlay" aria-hidden="true"></div>
         <div class="hero-container container">
             <div class="hero-content">
+                <span class="hero-eyebrow">Backed by The Times Group</span>
                 <h1>Learn AI from IIT, IIM and DTU.<br>Find the Right Programme for Where You Are Today.</h1>
                 <p>From your first model to leading AI strategy — explore certificate programmes from IIT Delhi, IIT Roorkee, IIT Madras, DTU and IIM Nagpur, delivered through TimesPro.</p>
                 <div class="hero-ctas">

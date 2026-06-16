@@ -259,6 +259,15 @@ section[id], main[id] { scroll-margin-top: calc(var(--sticky-h) + 16px); }
     letter-spacing: -0.5px;
 }
 .logo-sm { font-size: 20px; }
+
+/* Brand lockup (TimesPro + The Times Group) */
+.brand-lockup { display: flex; align-items: center; gap: 14px; }
+.brand-link { display: inline-flex; align-items: center; }
+.brand-logo { display: block; width: auto; }
+.brand-logo--timespro { height: 42px; }
+.brand-logo--timesgroup { height: 30px; }
+.brand-logo--sticky { height: 32px; }
+.brand-divider { width: 1px; height: 30px; background: var(--tp-border); flex-shrink: 0; }
 .top-nav-tag {
     font-size: 13px;
     font-weight: 600;
@@ -343,6 +352,30 @@ section[id], main[id] { scroll-margin-top: calc(var(--sticky-h) + 16px); }
     flex: 1;
     max-width: 600px;
 }
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: var(--tp-white);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 40px;
+    margin-bottom: 22px;
+    backdrop-filter: blur(6px);
+}
+.hero-eyebrow::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--tp-red);
+    box-shadow: 0 0 0 3px rgba(218, 33, 40, 0.35);
+}
+
 .hero h1 {
     font-size: clamp(32px, 5vw, 52px);
     color: var(--tp-white);
