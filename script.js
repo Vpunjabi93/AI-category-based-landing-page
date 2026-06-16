@@ -116,11 +116,27 @@ const TAB_LABELS = {
     'newest-ai': 'Quantum & GenAI'
 };
 
+// Institute -> logo file. New programmes from a listed institute get the logo
+// automatically (cards + runner). Institutes without a logo fall back to text.
+const INSTITUTE_LOGOS = {
+    'IIT Roorkee': 'assets/logos/iit-roorkee.png',
+    'IIT Delhi': 'assets/logos/iit-delhi.png',
+    'DTU': 'assets/logos/dtu.jpg',
+    'IIM Nagpur': 'assets/logos/iim-nagpur.png'
+    // 'IIT Madras (Pravartak)': add logo file here when available
+};
+
+// Logos supplied as white/reverse art — darkened via CSS so they show on light
+// backgrounds. Replace with a standard colour version to remove the override.
+const REVERSE_LOGOS = new Set(['IIT Delhi']);
+
 let activeFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('footerYear').textContent = '© ' + new Date().getFullYear();
 
+    renderHeroStats();
+    buildMarquee();
     renderCards(programmes);
     renderTable();
     wireFilters();
@@ -130,6 +146,45 @@ document.addEventListener('DOMContentLoaded', () => {
     wireStickyNav();
     wireScrollReveal();
 });
+
+function uniqueInstitutes() {
+    return [...new Set(programmes.map(p => p.institute))];
+}
+
+/* ---------------- Hero stats (derived from data, never hardcoded) ---------------- */
+function renderHeroStats() {
+    const programmesEl = document.querySelector('[data-stat="programmes"]');
+    const institutesEl = document.querySelector('[data-stat="institutes"]');
+    const durationEl   = document.querySelector('[data-stat="duration"]');
+
+    if (programmesEl) programmesEl.textContent = programmes.length;
+    if (institutesEl) institutesEl.textContent = uniqueInstitutes().length;
+    if (durationEl) {
+        const months = programmes.map(p => parseInt(p.duration, 10)).filter(n => !isNaN(n));
+        if (months.length) {
+            const min = Math.min(...months), max = Math.max(...months);
+            durationEl.textContent = (min === max) ? String(min) : (min + '–' + max);
+        }
+    }
+}
+
+/* ---------------- Partner-institute runner (marquee) ---------------- */
+function buildMarquee() {
+    const track = document.getElementById('marqueeTrack');
+    if (!track) return;
+
+    const item = (inst) => {
+        const logo = INSTITUTE_LOGOS[inst];
+        const darkCls = REVERSE_LOGOS.has(inst) ? ' logo-dark' : '';
+        return logo
+            ? `<div class="marquee-item"><img class="${darkCls.trim()}" src="${logo}" alt="${inst} logo" loading="lazy"></div>`
+            : `<div class="marquee-item marquee-item--text">${inst}</div>`;
+    };
+
+    const set = uniqueInstitutes().map(item).join('');
+    // Duplicate the set so the CSS translate loop is seamless
+    track.innerHTML = set + set;
+}
 
 /* ---------------- Filtering (tiles + tabs stay in sync) ---------------- */
 function applyFilter(filter) {
@@ -174,7 +229,9 @@ function wireFilters() {
         btn.addEventListener('click', () => applyFilter(btn.getAttribute('data-tab')));
     });
 
-    document.getElementById('resetFilter').addEventListener('click', () => applyFilter('all'));
+    const reset = document.getElementById('resetFilter');
+    reset.textContent = `Show all ${programmes.length} programmes`;
+    reset.addEventListener('click', () => applyFilter('all'));
 
     // Initialise the results bar
     applyFilter('all');
@@ -193,13 +250,15 @@ function renderCards(data) {
     const frag = document.createDocumentFragment();
     data.forEach(p => {
         const soon = startsSoon(p.startDate);
+        const logo = INSTITUTE_LOGOS[p.institute];
+        const darkCls = REVERSE_LOGOS.has(p.institute) ? ' logo-dark' : '';
+        const instMarkup = logo
+            ? `<img class="prog-logo${darkCls}" src="${logo}" alt="${p.institute} logo" loading="lazy"><span>${p.institute}</span>`
+            : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>${p.institute}</span>`;
         const card = document.createElement('article');
         card.className = 'prog-card';
         card.innerHTML = `
-            <div class="prog-institute">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                ${p.institute}
-            </div>
+            <div class="prog-institute">${instMarkup}</div>
             <h3 class="prog-title">${p.title}</h3>
             <span class="prog-badge">${p.badge}</span>
             <div class="prog-meta">
